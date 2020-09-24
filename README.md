@@ -54,7 +54,7 @@ AST is not just for viewing. You can do much more than that using AST. One examp
 AST is _Warning developer when there is naming convention violation._ By traversing the AST, if you find a Variable Name, 
 you can check whether that name matches with your convention. If not, you can generate an warning.
 
-In this assignment, however, we will check for a different task. 
+In this assignment, however, we will implement AST analysis for two different tasks. 
 ## Task 1 : Finding a recursive function. 
 [Recursive functions](https://en.wikipedia.org/wiki/Recursion_(computer_science)) are often compact, 
 easy to read, and easy to understand. But they often incur huge overhead due to 
@@ -98,23 +98,23 @@ For example,
 ```
 Variable `j` is redefined in line 4, which was already defined in an outer scope (line 2). While such redefinition 
 is legal, there is a high chance that, it is a developer mistake, and we need to build a tool to warn them.
-In the above example, we want to war the developer, 
+In the above example, we want to warn the developer, 
 ```c
 Redefining variable : "j" at line 4 which is initially defined at line 2
 ```
 We need to implement a policy (let us call it **Variable Redefinition Warning Policy**) that checks the developer
-written code. 
+written code and warns them if there is a policy violation. 
     
 ### Point Breakdown
 * **Visualizing and Understanding AST** - 10
 * **Task 1** (Detection of Recursive function) - 50
 * **Task 2** (Implementation of Variable Redefinition Warning Policy) - 40 
 
-## Logistics and Getting Started. 
+## Getting Started with the Coding 
 To implement the above two tasks, we will build a [clang tool](https://clang.llvm.org/docs/LibTooling.html) that 
 uses [llvm/clang's Recursive AST Visitor API](https://clang.llvm.org/doxygen/classclang_1_1RecursiveASTVisitor.html).
 We have provided all the setup code to get started. However, we strongly recommend students to go over the
-API documentations and understand the basic workflow. 
+API documentations of clang tooling and AST visitos and understand the basic workflow. 
  
 ### Steps
 1. Create a folder named `clang-hw2` under `$LLVM_HOME/clang/tools`.

@@ -64,7 +64,7 @@ In this assignment, however, we will implement AST analysis for two different ta
 easy to read, and easy to understand. But they often incur huge overhead due to 
 the, which is a major concern if you are developing for a resource constrained system. Your job in this function is to 
 determine whether a given function is [direct recursive](https://www.educative.io/courses/recursion-for-coding-interviews-in-cpp/BnKojpzLl2W) 
-or not. We will describe the tools that you will use for this task in [this section](#logistics-and-getting-started).
+or not. We will describe the tools that you will use for this task in [this section](#getting-started-with-the-coding).
 
 #### Example
 ```c

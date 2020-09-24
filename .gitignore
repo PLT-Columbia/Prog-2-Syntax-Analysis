@@ -1,6 +1,10 @@
 # Prerequisites
 *.d
-
+.idea/
+*.xml
+*.json
+*.bin
+*.output
 # Compiled Object files
 *.slo
 *.lo

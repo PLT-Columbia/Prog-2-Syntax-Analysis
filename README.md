@@ -23,19 +23,23 @@ We will learn how advanced analysis on the syntax tree through 2 different case 
 In previous assignment, you have seen how to build LLVM. `clang` compiler is a part of LLVM package. 
 For any code written in `C` (or `C++`), you can generate (and visualize) the AST using clang. 
 
-Try the following command,
-
+First let the shell/terminal know where you built you llvm.
 ```sh
 export LLVM_HOME=[base directory where you built your llvm];
+```
+We recommend adding this line to your `$HOME/.bashrc` file. 
+
+Then try the following command,
+```sh
 $LLVM_HOME/build/bin/clang -cc1 -ast-dump gcd.c -I /usr/include/ \
         -I $LLVM_HOME/build/lib/clang/12.0.0/include/;
 ```
 
-You should take some time to look at the output. Write a couple of sentence in the [outputs/Ast_Thoughts.txt](outputs/Ast_Thoughts.txt)
- file. describing how you perceived the output.   
+You should take some time to look at the output. Write a couple of sentences in the [outputs/Ast_Thoughts.txt](outputs/Ast_Thoughts.txt)
+ file describing how you perceived the output, what information are available in that output.    
  
- Alternatively, you can generate visual representation of the AST. 
- Try running the following command. 
+Alternatively, you can generate visual representation of the AST. 
+Try running the following command. 
  
 ```sh
 export LLVM_HOME=[base directory where you built your llvm];
@@ -43,7 +47,7 @@ $LLVM_HOME/build/bin/clang -cc1 -ast-view gcd.c -I /usr/include/ \
         -I $LLVM_HOME/build/lib/clang/12.0.0/include/;
 ```
 
-This will generate a `dot` file in your `/tmp` directory. Look for the file name in your screen. Then run, 
+This will generate a `dot` file in your `/tmp/` directory. Look out for the dot file name in your screen. Then run, 
 ```
 dot -Tpdf /tmp/<dot file name> -o output/AstView.pdf
 ```
@@ -51,7 +55,7 @@ Look at the pdf file generated try to match that with output generated in the pr
 
 ### Analyzing code based on the AST
 AST is not just for viewing. You can do much more than that using AST. One example task that you can do by visiting 
-AST is _Warning developer when there is naming convention violation._ By traversing the AST, if you find a Variable Name, 
+AST is _Warn developers when a variable name does not follow a convention (e.g. camel casing)._ By traversing the AST, if you find a Variable Name, 
 you can check whether that name matches with your convention. If not, you can generate an warning.
 
 In this assignment, however, we will implement AST analysis for two different tasks. 
@@ -72,7 +76,7 @@ or not. We will describe the tools that you will use for this task in [this sect
 6. }
 ```
 In this `C` code, the function `recursive_factorial` is a direct recursive function, since in its body, there is a call
-to itself (line 5). In contrast, the following function is not recursive. Evn though there is function call at 
+to itself (line 5). In contrast, the following function is not recursive. Even though there is function call at 
 line 4, the callee is not the function itself.
 ```c
 1. int iterative_factorial(int n1){
@@ -139,8 +143,9 @@ to implement this `isRecursiveFunction`.
 check whether that variable is declared in previously. If you find a variable is declared before, 
 you should call the helper funtion [`printVarReDeclarationInformation`](src/ClangHw2.cpp#L37) with the variable name, 
 line number where it was initially defined, and line number where it is being redefined. 
+(You do not have to do the scope analysis and test the variable reachability test, we leave those for future assignments.)
 
-When you fully implemented both the functions and run the tool with [`gcd.c`](gcd.c), you will see the following output
+When you fully implemented both the tasks and run the tool with [`gcd.c`](gcd.c), you will see the following output
 ```
 gcd_recursive	is a recursive function
 Redefining variable : "k4" at line 7 which is initially defined at line 2

@@ -88,7 +88,7 @@ line 4, the callee is not the function itself.
 7. }
 ``` 
 
-## Task 2 : Finding inner scope variable redefinition.
+## Task 2 : Variable Redefinition Warning Policy.
 According to `C` language specification, it is perfectly legal to re-define a variable with the same name in an inner scope.
 For example, 
 ```c

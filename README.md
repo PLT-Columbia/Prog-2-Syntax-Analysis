@@ -108,6 +108,26 @@ Redefining variable : "j" at line 4 which is initially defined at line 2
 ```
 We need to implement a policy (let us call it **Variable Redefinition Warning Policy**) that checks the developer
 written code and warns them if there is a policy violation. 
+
+You do not have to do the scope analysis and test the variable reachability test, we leave those for future assignments.
+```c
+ 1. int gcd_recursive(int m2, int n2) {
+ 2.     int r = m2 % n2;
+ 3.     if (r != 0) {
+ 4.         int k4 = 0;
+ 5.  	    return gcd_recursive(n2,r);
+ 6.      }
+ 7.      else {
+ 8.  	    int k4 = n2;
+ 9.         return k4;
+10.      }
+11.  }
+```
+In the above example, `k4` variable is defined in line 4 and again in line 8. Even though (according to `C` standard) 
+the earlier definition (at line 4) is not visible at line 8, you do not have to consider that. Simply put, 
+It does not matter in which scope a variable is declared, if a variable is declared earlier, you should generate
+warning for redefinition. 
+
     
 ### Point Breakdown
 * **Visualizing and Understanding AST** - 10
@@ -143,7 +163,6 @@ to implement this `isRecursiveFunction`.
 check whether that variable is declared in previously. If you find a variable is declared before, 
 you should call the helper funtion [`printVarReDeclarationInformation`](src/ClangHw2.cpp#L37) with the variable name, 
 line number where it was initially defined, and line number where it is being redefined. 
-(You do not have to do the scope analysis and test the variable reachability test, we leave those for future assignments.)
 
 When you fully implemented both the tasks and run the tool with [`gcd.c`](gcd.c), you will see the following output
 ```

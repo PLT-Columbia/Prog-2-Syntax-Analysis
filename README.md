@@ -13,6 +13,13 @@ Instructor: Prof. Baishakhi Ray
 * **Due Date:** Wednesday, October 14, 2020 by 11:59 PM. **No extensions!**
 * **Total Points:** 100
 
+### Assignment Objectives
+1. You will learn about the AST structure of the code.
+2. You will get familiar with different AST APIs provided by clang/llvm. 
+3. You will get familiar with clang's ASTVisiter. 
+4. You will learn how to traverse AST. 
+5. You will learn how to make semantic reasoning based on AST. 
+
 ### Assignment
 You have already implemented a (albeit very simple) lexical analyzer/ tokenizer that converts character sequence in 
 code to token sequence. As you learned in the lecture, this token sequence is the processed by the parser and 

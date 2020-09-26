@@ -145,7 +145,7 @@ Even though `k4` variable is defined in line 4 and again in line 8. The earlier 
 6.      }
 7. }
 ```
-In this example, at line 3, value of variable `i` is changed, but it still is the same variable. A variable will be considered redefined, when another varible with the same name (with same or different data types) is **re-declared** in an inner scope.  
+In this example, at line 3, value of variable `i` is changed, but it still is the same variable, thus not a redefinition. A variable will be considered redefined, when another varible with the same name (with same or different data types) is **re-declared** in an inner scope.  
 
     
 ### Point Breakdown

@@ -116,7 +116,7 @@ Redefining variable : "j" at line 4 which is initially defined at line 2
 We need to implement a policy (let us call it **Variable Redefinition Warning Policy**) that checks the developer
 written code and warns them if there is a policy violation. 
 
-You do not have to do the scope analysis and test the variable reachability test, we leave those for future assignments.
+You **do not** have to do the scope analysis and test for the variable reachability, we leave those for future assignments.
 ```c
  1. int gcd_recursive(int m2, int n2) {
  2.     int r = m2 % n2;
@@ -131,8 +131,8 @@ You do not have to do the scope analysis and test the variable reachability test
 11.  }
 ```
 In the above example, `k4` variable is defined in line 4 and again in line 8. Even though (according to `C` standard) 
-the earlier definition (at line 4) is not visible at line 8, you do not have to consider that. Simply put, 
-It does not matter in which scope a variable is declared, if a variable is declared earlier, you should generate
+the earlier definition (at line 4) is not visible at line 8, you **do not** have to consider that. Simply put, 
+It does not matter in which scope a variable is declared, if a variable is declared earlier (in the code), you should generate
 warning for redefinition. 
 
     

@@ -96,6 +96,10 @@ line 4, the callee is not the function itself.
 ``` 
 
 ## Task 2 : Variable Redefinition Warning Policy.
+
+# TO BE MODIFIED.
+
+
 According to `C` language specification, it is perfectly legal to re-define a variable with the same name in an inner scope.
 For example, 
 ```c
@@ -115,6 +119,9 @@ Redefining variable : "j" at line 4 which is initially defined at line 2
 ```
 We need to implement a policy (let us call it **Variable Redefinition Warning Policy**) that checks the developer
 written code and warns them if there is a policy violation. 
+
+
+# TO BE MODIFIED
 
 You **do not** have to do the scope analysis and test for the variable reachability, we leave those for future assignments.
 ```c
@@ -158,6 +165,8 @@ a binary file named `clang-hw2` in `$LLVM_HOME/build/bin`.
 `$LLVM_HOME/build/bin/clang-hw2 gcd.c --`
 
 ### Deep into the code.
+
+#TO BE MODIFIED.
 The [`FunctionVisitor`](src/ClangHw2.cpp#L59) class is a recursive AST visitor, which implements 3 visitors
 for 3 different types of AST nodes. The [`VisitForStmt`](src/ClangHw2.cpp#L89) is called when clang's AST visitor
 encounters a [`ForStmt`](https://clang.llvm.org/doxygen/classclang_1_1ForStmt.html) type AST node. You **DO NOT** 

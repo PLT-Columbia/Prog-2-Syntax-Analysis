@@ -97,14 +97,11 @@ line 4, the callee is not the function itself.
 
 ## Task 2 : Variable Redefinition Warning Policy.
 
-# TO BE MODIFIED.
-
-
 According to `C` language specification, it is perfectly legal to re-define a variable with the same name in an inner scope.
 For example, 
 ```c
 1. void foo(){
-2.      int i = 0, j = 5;
+2.      int i = 4, j = 5;
 3.      for (i = 0; i < 6; i++){
 4.          int j = 9;
 5.          // Do something.
@@ -120,10 +117,7 @@ Redefining variable : "j" at line 4 which is initially defined at line 2
 We need to implement a policy (let us call it **Variable Redefinition Warning Policy**) that checks the developer
 written code and warns them if there is a policy violation. 
 
-
-# TO BE MODIFIED
-
-You **do not** have to do the scope analysis and test for the variable reachability, we leave those for future assignments.
+The following case, however, **does not** have any variable redifinition, thus should not generate any warning. 
 ```c
  1. int gcd_recursive(int m2, int n2) {
  2.     int r = m2 % n2;
@@ -137,10 +131,21 @@ You **do not** have to do the scope analysis and test for the variable reachabil
 10.      }
 11.  }
 ```
-In the above example, `k4` variable is defined in line 4 and again in line 8. Even though (according to `C` standard) 
-the earlier definition (at line 4) is not visible at line 8, you **do not** have to consider that. Simply put, 
-It does not matter in which scope a variable is declared, if a variable is declared earlier (in the code), you should generate
-warning for redefinition. 
+Even though `k4` variable is defined in line 4 and again in line 8. The earlier definition (at line 4) is not visible at line 8, i.e. those are in different scopes. 
+
+#### Some points to consider for Task2
+1. You may consider there will be no global variable. You will just have 1 function per file.
+2. Changing value of variable is **NOT** considered a definition. For instance, 
+```c
+1. void foo(){
+2.      int i = 4, j = 5;
+3.      for (i = 0; i < 6; i++){
+4.          int j = 9;
+5.          // Do something.
+6.      }
+7. }
+```
+In this example, at line 3, value of variable `i` is changed, but it still is the same variable. A variable will be considered redefined, when another varible with the same name (with same or different data types) is **re-declared** in an inner scope.  
 
     
 ### Point Breakdown
@@ -166,7 +171,6 @@ a binary file named `clang-hw2` in `$LLVM_HOME/build/bin`.
 
 ### Deep into the code.
 
-#TO BE MODIFIED.
 The [`FunctionVisitor`](src/ClangHw2.cpp#L59) class is a recursive AST visitor, which implements 3 visitors
 for 3 different types of AST nodes. The [`VisitForStmt`](src/ClangHw2.cpp#L89) is called when clang's AST visitor
 encounters a [`ForStmt`](https://clang.llvm.org/doxygen/classclang_1_1ForStmt.html) type AST node. You **DO NOT** 
@@ -175,8 +179,8 @@ have to do anything with this function. We are providing it to give you a head s
 * For Task 1, we implemented [`VisitFunctionDecl`](src/ClangHw2.cpp#L69), which calls helper function 
 [`isRecursiveFunction`](src/ClangHw2.cpp#L64) and decides whether that function is recursive or not. You have 
 to implement this `isRecursiveFunction`. 
-* For Task 2, whenever a variable is declared, [`VisitVarDecl`](src/ClangHw2.cpp#L81) is called. You have to 
-check whether that variable is declared in previously. If you find a variable is declared before, 
+* For Task 2, [`VisitFunctionDecl`](src/ClangHw2.cpp#L69) calls the function [`analyzeRedifinition`]() inside the function. 
+Inside the `analyzeRedifinition`, if you encounter a variable being re-defined, 
 you should call the helper funtion [`printVarReDeclarationInformation`](src/ClangHw2.cpp#L37) with the variable name, 
 line number where it was initially defined, and line number where it is being redefined. 
 

@@ -259,7 +259,7 @@ int mulNum(int a, int b) {
 FuncPtr getFunc(int op) {
     return op == 1 ? &addNum :
            op == 2 ? &mulNum :
-           (int (*)(int a, int b))0;
+           (FuncPtr)0;
 }
 
 int main() {

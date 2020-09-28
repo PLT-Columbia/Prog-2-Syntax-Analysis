@@ -244,7 +244,9 @@ foo(arg1, arg2); bar(arg1, arg2);
 foo(bar(3) + 1, 9 + bar(6))
 ```
 
-4. You have to format both of the **callee** and the **arguments** of a function. For example, consider the following input:
+4. We will only test C codes. You **don't** need to handle function calls in C++ like operator overloading, user defined literal, etc.
+
+5. You have to format both of the **callee** and the **arguments** of a function. For example, consider the following input:
 ```
 typedef int (*FuncPtr)(int, int);
 

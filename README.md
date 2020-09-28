@@ -239,7 +239,7 @@ foo(arg1,
 foo(arg1, arg2); bar(arg1, arg2);
 ```
 
-3. The arguments of a function call will be either a pure function call or a pure non- function call. For example, we will not test this case:
+3. The callee or arguments of a function call will be either a pure function call or a pure non- function call. For example, we will not test this case:
 ```
 foo(bar(3) + 1, 9 + bar(6))
 ```

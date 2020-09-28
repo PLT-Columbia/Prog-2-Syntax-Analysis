@@ -203,6 +203,75 @@ folder.
 4. Commit.
 5. Push.
 
+## Extra Credit
+We can do a lot of interesting things using AST. In task 1 you learned how to identify recursive functions. In this extra credit part, you will get some experience on automatic code formatting by analyzing an AST.
+
+Specifically, you need to implement a function `formatCode()`, that takes a string (source code) as its input. In this function, you need to format the function calls in the source code: `<callee><space>(arg1,<space>arg2, ...,<space>argn)`. The `<space>` represents a single space character `' '`. Note that the arguments may also be a function call. If it is a function call, you should also format it. If not, keep the original source code (that is, the return value of `getSource()` below). 
+
+We provide a function for your convenience `std::string getSource(Stmt* node)`. You can use this function to get the original source code of a `Stmt*`.
+
+To make things easier, you just need to output the line number and the formatted function call (no need to modify the original input string). For example, if line 30 of the original code is:
+
+```
+int ret = foo( k     ,      bar(    5      )  +  foo(   1    , bar(     foo    (    1+   3  ,   2    )    )    )    );
+```
+
+Then you should output the following line to `stdout`:
+
+```
+line 30: foo (k, foo (1, bar (foo (1+   3, 2))))
+```
+
+You may assume the following constraints:
+
+1. Function calls will **never** span multiple lines, like:
+```
+foo(arg1,
+    arg2,
+    arg3
+);
+```
+
+2. The number of the outermost function call (if any) in one line will always be exactly one. We will **not** test the codes like following:
+```
+foo(arg1, arg2); bar(arg1, arg2);
+```
+
+3. The arguments of a function call will be either a pure function call or a pure non- function call. For example, we will not test this case:
+```
+foo(bar(3) + 1, 9 + bar(6))
+```
+
+4. You have to format both of the **callee** and the **arguments** of a function. For example, consider the following input:
+```
+typedef int (*FuncPtr)(int, int);
+
+int addNum(int a, int b) {
+    return a + b;
+}
+
+int mulNum(int a, int b) {
+    return a * b;
+}
+
+FuncPtr getFunc(int op) {
+    return op == 1 ? &addNum :
+           op == 2 ? &mulNum :
+           (int (*)(int a, int b))0;
+}
+
+int main() {
+    int ret = getFunc( 1+0   )(  5 , 6   );
+    return 0;
+}
+
+```
+Then you need to output:
+```
+line 18: getFunc (1+0) (5, 6)
+```
+
+
 ## Piazza
 If you have any questions about this programming assignment, please post them in the Piazza forum for the course, and an instructor will reply to them as soon as possible. Any updates to the assignment itself will be available in Piazza.
 

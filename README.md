@@ -206,9 +206,11 @@ folder.
 ## Extra Credit
 We can do a lot of interesting things using AST. In task 1 you learned how to identify recursive functions. In this extra credit part, you will get some experience on automatic code formatting by analyzing an AST.
 
-Specifically, you need to implement a function `formatCode()`, that takes a string (source code) as its input. In this function, you need to format the function calls in the source code: `<callee><space>(arg1,<space>arg2, ...,<space>argn)`. The `<space>` represents a single space character `' '`. Note that the arguments may also be a function call. If it is a function call, you should also format it. If not, keep the original source code (that is, the return value of `getSource()` below). 
+Specifically, you need to implement a function `bool VisitCallExpr(CallExpr* functionCall)`, that takes a `CallExpr*` as its input. In this function, you need to format the function call to this format: `<callee><space>(arg1,<space>arg2, ...,<space>argn)`. The `<space>` represents a single space character `' '`. Note that the callee and/or arguments of a function may also be a function call. If it is a function call, you should also format it. If not, keep the original source code (that is, the return value of `getSource()` below). 
 
 We provide a function for your convenience `std::string getSource(Stmt* node)`. You can use this function to get the original source code of a `Stmt*`.
+
+We also provide some skeleton code for `VisitCallExpr()`.
 
 To make things easier, you just need to output the line number and the formatted function call (no need to modify the original input string). For example, if line 30 of the original code is:
 

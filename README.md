@@ -182,7 +182,7 @@ have to do anything with this function. We are providing it to give you a head s
 * For Task 1, we implemented [`VisitFunctionDecl`](src/ClangHw2.cpp#L116), which calls helper function 
 [`isRecursiveFunction`](src/ClangHw2.cpp#L64) and decides whether that function is recursive or not. You have 
 to implement this `isRecursiveFunction`. 
-* For Task 2, [`VisitFunctionDecl`](src/ClangHw2.cpp#L116) calls the function [`analyzeRedifinition`](src.ClangHw2.cpp#L69) 
+* For Task 2, [`VisitFunctionDecl`](src/ClangHw2.cpp#L116) calls the function [`analyzeRedifinition`](src/ClangHw2.cpp#L69) 
 inside the function. Inside the `analyzeRedifinition`, if you encounter a variable being re-defined, 
 you should call the helper funtion [`printVarReDeclarationInformation`](src/ClangHw2.cpp#L28) with the variable name, 
 line number where it was initially defined, and line number where it is being redefined. 
@@ -260,18 +260,18 @@ Now it much more easy to understand the function call.
 16.
 17. int main() {
 18.     int ret = getFunc( 
-19.           1 +   0   )(  5 , 6   );
+19.           1+0   )(  5 , 6   );
 20.     return 0;
 21. }
 ```
 Here, there is a function call at line 18. However, the callee is not a direct function, rather another `CallExpr`. You have to reformat that too. 
 The formatted code that you should generate
 ```c
-getFunc (1 +   0) (5, 6)
+getFunc (1+0) (5, 6)
 ```
 
 You may assume the following constraints:
-1. You have to reformat only the `CallExpr` type node. If you encounter any other node (for instance, `1 +   0 ` in line 19 of example 2, which is a [`BinaryOperator`](https://clang.llvm.org/doxygen/classclang_1_1BinaryOperator.html)), you should copy the code as is from the input source. We have provided a helper function [`getSource`](src/ClangHw2.cpp#L61) to copy 
+1. You have to reformat only the `CallExpr` type node. If you encounter any other node (for instance, `1+0 ` in line 19 of example 2, which is a [`BinaryOperator`](https://clang.llvm.org/doxygen/classclang_1_1BinaryOperator.html)), you should copy the code as is from the input source. We have provided a helper function [`getSource`](src/ClangHw2.cpp#L61) to copy 
 the input code corresponding to a node. 
 
 2. The callee or arguments of a function call will be either a pure function call or a pure non- function call. For example, we will **not** test this case:

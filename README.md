@@ -43,7 +43,7 @@ $LLVM_HOME/build/bin/clang -cc1 -ast-dump gcd.c -I /usr/include/ \
         -I $LLVM_HOME/build/lib/clang/12.0.0/include/;
 ```
 
-You should take some time to look at the output. Write a couple of sentences in the [outputs/Ast_Thoughts.txt](outputs/Ast_Thoughts.txt)
+You should take some time to look at the output. Write a couple of sentences in the [outputs/AST.txt](outputs/AST.txt)
  file describing how you perceived the output, what information are available in that output.    
  
 Alternatively, you can generate visual representation of the AST. 
@@ -287,7 +287,7 @@ foo(bar(3) + 1, 9 + bar(6))
 ### Submission
 1. Copy the completed `ClangHw2.cpp` file from your `$LLVM_HOME/clang/tools/clang-hw2/` directory to this projects `src`
 folder. 
-2. Fillup the writeup in [outputs/Ast_Thoughts.txt](outputs/Ast_Thoughts.txt). 
+2. Fillup the writeup in [outputs/AST.txt](outputs/AST.txt). 
 3. Copy the executable `clang-hw2` from your `$LLVM_HOME/build/bin` directory to this projects `outputs` directory.
 4. Commit.
 5. Push.

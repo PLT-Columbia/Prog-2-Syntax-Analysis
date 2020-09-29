@@ -201,19 +201,21 @@ or any other print formatting (also remove any print statement you added before 
 We can do a lot of interesting things using AST. In task 1 you learned how to identify recursive functions. 
 In this extra credit part, you will get some experience on automatic code formatting by analyzing an AST.
 If there is function call in your code like 
-
-`foo( 1,        2      , 3    ,    5)` 
-
-you need to format it 
-
-`foo (1, 2, 3, 5)`.
+```c
+foo( 1,        2      , 3    ,    5)
+```
+you need to format it as
+```c
+foo (1, 2, 3, 5)
+```
 
 More specifically, you have to format the call expression as `<callee><space>(arg1,<space>arg2, ...,<space>argn)`. 
 The `<space>` represents a single space character `' '`. Note that the callee and/or arguments of a function may also be a function call.
+In such a case, you have to reformat those too. 
 
 
 #### Code and Logistics 
-From the `VisitFunctionDecl` function, we call [`analyzeCallExpressionReformat`](src/ClangHw2.cpp#L69) where, we do a [Depth First Search (DFS)](https://en.wikipedia.org/wiki/Depth-first_search) on the AST. While doing this DFS, if we encounter any [`CallExpr`]() type node, we call the [`formatFunctionCall`](src/ClangHw2.cpp#L79). 
+From the `VisitFunctionDecl` function, we call [`analyzeCallExpressionReformat`](src/ClangHw2.cpp#L69) where, we do a [Depth First Search (DFS)](https://en.wikipedia.org/wiki/Depth-first_search) on the AST. While doing this DFS, if we encounter any [`CallExpr`](https://clang.llvm.org/doxygen/classclang_1_1CallExpr.html) type node, we call the [`formatFunctionCall`](src/ClangHw2.cpp#L79). 
 You have to implement this function, so that the function call expression is formatted. 
 
 Here are some examples:
@@ -268,10 +270,10 @@ getFunc (1 +   0) (5, 6)
 ```
 
 You may assume the following constraints:
-1. You have to reformat only the `CallExpr` type node. If you encounter any other node (for instance, `1 +   0 ` in line 19 of example 2, which is a `BinaryExpr`), you should copy the code as is from the input source. We have provided a helper function [`getSource`](src/ClangHw2.cpp#L61) to copy 
+1. You have to reformat only the `CallExpr` type node. If you encounter any other node (for instance, `1 +   0 ` in line 19 of example 2, which is a [`BinaryOperator`](https://clang.llvm.org/doxygen/classclang_1_1BinaryOperator.html)), you should copy the code as is from the input source. We have provided a helper function [`getSource`](src/ClangHw2.cpp#L61) to copy 
 the input code corresponding to a node. 
 
-2. The callee or arguments of a function call will be either a pure function call or a pure non- function call. For example, we will not test this case:
+2. The callee or arguments of a function call will be either a pure function call or a pure non- function call. For example, we will **not** test this case:
 ```
 foo(bar(3) + 1, 9 + bar(6))
 ```

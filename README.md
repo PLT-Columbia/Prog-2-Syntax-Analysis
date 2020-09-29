@@ -69,10 +69,10 @@ In this assignment, however, we will implement AST analysis for two different ta
 ## Task 1 : Finding a recursive function. 
 [Recursive functions](https://en.wikipedia.org/wiki/Recursion_(computer_science)) are often compact, 
 easy to read, and easy to understand. But they often incur huge overhead due to 
-the stack maintenance in a function call, which is a major concern if you are developing for a resource constrained system. 
+the [call stack](https://en.wikipedia.org/wiki/Call_stack) maintenance, which is a major concern if you are developing for a resource constrained system. 
 Your job in this task is to 
 determine whether a given function is [direct recursive](https://www.educative.io/courses/recursion-for-coding-interviews-in-cpp/BnKojpzLl2W) 
-or not. We will describe the tools that you will use for this task in [this section](#getting-started-with-the-coding).
+or not. We will describe the tools that you will use for this task in [a later section](#getting-started-with-the-coding).
 
 #### Example
 ```c
@@ -110,7 +110,7 @@ For example,
 7. }
 ```
 Variable `j` is redefined in line 4, which was already defined in an outer scope (line 2). While such redefinition 
-is legal, there is a high chance that, it is a developer mistake, and we need to build a tool to warn them.
+is legal, there is a high chance that it is a developer mistake, and we need to build a tool to warn them.
 In the above example, we want to warn the developer, 
 ```c
 Redefining variable : "j" at line 4 which is initially defined at line 2
@@ -132,10 +132,11 @@ The following case, however, **does not** have any variable redifinition, thus s
 10.      }
 11.  }
 ```
-Even though `k4` variable is defined in line 4 and again in line 8. The earlier definition (at line 4) is not visible at line 8, i.e. those are in different scopes. 
+Even though `k4` variable is defined in line 4 and again in line 8. The earlier definition (at line 4) is not visible 
+at line 8, i.e. those are in different scopes. 
 
 #### Some points to consider for Task2
-1. You may consider there will be no global variable. You will just have 1 function per file.
+1. You may consider there will be no global variable.
 2. Changing value of variable is **NOT** considered a definition. For instance, 
 ```c
 1. void foo(){
@@ -151,8 +152,8 @@ In this example, at line 3, value of variable `i` is changed, but it still is th
     
 ### Point Breakdown
 * **Visualizing and Understanding AST** - 10
-* **Task 1** (Detection of Recursive function) - 50
-* **Task 2** (Implementation of Variable Redefinition Warning Policy) - 40 
+* **Task 1** (Detection of Recursive function) - 40
+* **Task 2** (Implementation of Variable Redefinition Warning Policy) - 50 
 
 ## Getting Started with the Coding 
 To implement the above two tasks, we will build a [clang tool](https://clang.llvm.org/docs/LibTooling.html) that 
@@ -168,32 +169,115 @@ API documentations of clang tooling and AST visitos and understand the basic wor
 4. Now go to `$LLVM_HOME/build` and run `make`. When the build is successfully finished, it will generate 
 a binary file named `clang-hw2` in `$LLVM_HOME/build/bin`. 
 5. Now run this binary using the following command <br/>
-`$LLVM_HOME/build/bin/clang-hw2 gcd.c --`
+`$LLVM_HOME/build/bin/clang-hw2 examples/gcd.c --`
 
 ### Deep into the code.
 
-The [`FunctionVisitor`](src/ClangHw2.cpp#L59) class is a recursive AST visitor, which implements 3 visitors
-for 3 different types of AST nodes. The [`VisitForStmt`](src/ClangHw2.cpp#L89) is called when clang's AST visitor
+The [`FunctionVisitor`](src/ClangHw2.cpp#L36) class is a recursive AST visitor, which implements 3 visitors
+for 3 different types of AST nodes. The [`VisitForStmt`](src/ClangHw2.cpp#L143) is called when clang's AST visitor
 encounters a [`ForStmt`](https://clang.llvm.org/doxygen/classclang_1_1ForStmt.html) type AST node. You **DO NOT** 
 have to do anything with this function. We are providing it to give you a head start in AST Visitor. 
 
-* For Task 1, we implemented [`VisitFunctionDecl`](src/ClangHw2.cpp#L69), which calls helper function 
+* For Task 1, we implemented [`VisitFunctionDecl`](src/ClangHw2.cpp#L116), which calls helper function 
 [`isRecursiveFunction`](src/ClangHw2.cpp#L64) and decides whether that function is recursive or not. You have 
 to implement this `isRecursiveFunction`. 
-* For Task 2, [`VisitFunctionDecl`](src/ClangHw2.cpp#L69) calls the function [`analyzeRedifinition`]() inside the function. 
-Inside the `analyzeRedifinition`, if you encounter a variable being re-defined, 
-you should call the helper funtion [`printVarReDeclarationInformation`](src/ClangHw2.cpp#L37) with the variable name, 
+* For Task 2, [`VisitFunctionDecl`](src/ClangHw2.cpp#L116) calls the function [`analyzeRedifinition`](src.ClangHw2.cpp#L69) 
+inside the function. Inside the `analyzeRedifinition`, if you encounter a variable being re-defined, 
+you should call the helper funtion [`printVarReDeclarationInformation`](src/ClangHw2.cpp#L28) with the variable name, 
 line number where it was initially defined, and line number where it is being redefined. 
 
 When you fully implemented both the tasks and run the tool with [`gcd.c`](gcd.c), you will see the following output
 ```
-gcd_recursive	is a recursive function
+gcd_recursive - recursive
 Redefining variable : "k4" at line 7 which is initially defined at line 2
 ```
 
 ***N.B.*** We have provided some other helper functions. You can print things as you are developing. However, make sure
 you use the helper functions that we provided to print your output. Please **DO NOT** change any helper function 
 or any other print formatting (also remove any print statement you added before submission).  
+
+
+## Extra Credit - 50 points
+We can do a lot of interesting things using AST. In task 1 you learned how to identify recursive functions. 
+In this extra credit part, you will get some experience on automatic code formatting by analyzing an AST.
+If there is function call in your code like 
+
+`foo( 1,        2      , 3    ,    5)` 
+
+you need to format it 
+
+`foo (1, 2, 3, 5)`.
+
+More specifically, you have to format the call expression as `<callee><space>(arg1,<space>arg2, ...,<space>argn)`. 
+The `<space>` represents a single space character `' '`. Note that the callee and/or arguments of a function may also be a function call.
+
+
+#### Code and Logistics 
+From the `VisitFunctionDecl` function, we call the `analyzeCallExpressionReformat` where, we do a [Depth First Search (DFS)](https://en.wikipedia.org/wiki/Depth-first_search) on the AST. While doing this DFS, if we encounter any [`CallExpr`]() type node, we call the [`formatFunctionCall`](src/ClangHw2.cpp#L79). 
+You have to implement this function, so that the function call expression is formatted. 
+
+Here are some examples:
+1. This following code is very hard to read,
+```c
+ 1. int bar(int k){
+ 2.     foo(
+ 3.   3,
+ 4.                     foo (
+ 5.     too(    ) ,
+ 6. foo(
+ 7.                   5  ,  too (   )
+ 8.        )            )
+ 9.                           );
+10.        return 0;
+11. }
+```
+However, when you run your reformatter tool, the function call to `foo` at line 2 should be formatted as
+```c
+foo (3, foo (too (), foo (5, too ())))
+```
+Now it much more easy to understand the function call. 
+
+2. Another example,
+```c
+ 1. typedef int (*FuncPtr)(int, int);
+ 2. 
+ 3. int addNum(int a, int b) {
+ 4.     return a + b;
+ 5. }
+ 6.
+ 7. int mulNum(int a, int b) {
+ 8.   return a * b;
+ 9. }
+10.
+11. FuncPtr getFunc(int op) {
+12.     return op == 1 ? &addNum :
+13.           op == 2 ? &mulNum :
+14.           (FuncPtr)0;
+15. }
+16.
+17. int main() {
+18.     int ret = getFunc( 
+19.           1 +   0   )(  5 , 6   );
+20.     return 0;
+21. }
+```
+Here, there is a function call at line 18. However, the callee is not a direct function, rather another `CallExpr`. You have to reformat that too. 
+The formatted code that you should generate
+```c
+getFunc (1 +   0) (5, 6)
+```
+
+You may assume the following constraints:
+1. You have to reformat only the `CallExpr` type node. If you encounter any other node (for instance, `1 +   0 ` in line 19 of example 2, which is a `BinaryExpr`), you should copy the code as is from the input source. We have provided a helper function [`getSource`](src/ClangHw2.cpp#L61) to copy 
+the input code corresponding to a node. 
+
+2. The callee or arguments of a function call will be either a pure function call or a pure non- function call. For example, we will not test this case:
+```
+foo(bar(3) + 1, 9 + bar(6))
+```
+
+3. We will only test C codes. You **don't** need to handle function calls in C++ like operator overloading, user defined literal, etc.
+
 
 ### Submission
 1. Copy the completed `ClangHw2.cpp` file from your `$LLVM_HOME/clang/tools/clang-hw2/` directory to this projects `src`
@@ -202,80 +286,6 @@ folder.
 3. Copy the executable `clang-hw2` from your `$LLVM_HOME/build/bin` directory to this projects `outputs` directory.
 4. Commit.
 5. Push.
-
-## Extra Credit
-We can do a lot of interesting things using AST. In task 1 you learned how to identify recursive functions. In this extra credit part, you will get some experience on automatic code formatting by analyzing an AST.
-
-Specifically, you need to implement a function `bool VisitCallExpr(CallExpr* functionCall)`, that takes a `CallExpr*` as its input. In this function, you need to format the function call to this format: `<callee><space>(arg1,<space>arg2, ...,<space>argn)`. The `<space>` represents a single space character `' '`. Note that the callee and/or arguments of a function may also be a function call. If it is a function call, you should also format it. If not, keep the original source code (that is, the return value of `getSource()` below). 
-
-We provide a function for your convenience `std::string getSource(Stmt* node)`. You can use this function to get the original source code of a `Stmt*`.
-
-We also provide some skeleton code for `VisitCallExpr()`.
-
-To make things easier, you just need to output the line number and the formatted function call (no need to modify the original input string). For example, if line 30 of the original code is:
-
-```c
-int ret = foo( k     ,     foo(   1    , bar(     foo    (    1+   3  ,   2    )    )    )    );
-```
-
-Then you should output the following line to `stdout`:
-
-```
-line 30: foo (k, foo (1, bar (foo (1+   3, 2))))
-```
-
-You may assume the following constraints:
-
-1. Function calls will **never** span multiple lines, like:
-```c
-foo(arg1,
-    arg2,
-    arg3
-);
-```
-
-
-2. The number of the outermost function call (if any) in one line will always be exactly one. We will **not** test the codes like following:
-```
-foo(arg1, arg2); bar(arg1, arg2);
-```
-
-3. The callee or arguments of a function call will be either a pure function call or a pure non- function call. For example, we will not test this case:
-```
-foo(bar(3) + 1, 9 + bar(6))
-```
-
-4. We will only test C codes. You **don't** need to handle function calls in C++ like operator overloading, user defined literal, etc.
-
-5. You have to format both of the **callee** and the **arguments** of a function. For example, consider the following input:
-```
-typedef int (*FuncPtr)(int, int);
-
-int addNum(int a, int b) {
-    return a + b;
-}
-
-int mulNum(int a, int b) {
-    return a * b;
-}
-
-FuncPtr getFunc(int op) {
-    return op == 1 ? &addNum :
-           op == 2 ? &mulNum :
-           (FuncPtr)0;
-}
-
-int main() {
-    int ret = getFunc( 1+0   )(  5 , 6   );
-    return 0;
-}
-
-```
-Then you need to output:
-```
-line 18: getFunc (1+0) (5, 6)
-```
-
 
 ## Piazza
 If you have any questions about this programming assignment, please post them in the Piazza forum for the course, and an instructor will reply to them as soon as possible. Any updates to the assignment itself will be available in Piazza.

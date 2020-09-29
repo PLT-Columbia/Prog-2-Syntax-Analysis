@@ -19,6 +19,7 @@ Instructor: Prof. Baishakhi Ray
 3. You will get familiar with clang's ASTVisiter. 
 4. You **will learn** how to traverse AST. 
 5. You **will learn** how to make semantic reasoning based on AST. 
+6. You **will learn** how to write a simple code reformatter. 
 
 ### Assignment
 You have already implemented a (albeit very simple) lexical analyzer/ tokenizer that converts character sequence in 

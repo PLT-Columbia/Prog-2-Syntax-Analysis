@@ -1,2 +1,0 @@
-gcd_recursive	is a recursive function
-Redefining variable : "k4" at line 7 which is initially defined at line 2

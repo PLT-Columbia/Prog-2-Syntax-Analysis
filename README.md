@@ -280,6 +280,8 @@ foo(bar(3) + 1, 9 + bar(6))
 
 3. We will only test C codes. You **don't** need to handle function calls in C++ like operator overloading, user defined literal, etc.
 
+4. This problem may look like a simple character parsing and formatting problem, but you **have to** use the template code we provided. You cannot modify any of our function prototypes. 
+
 
 ### Submission
 1. Copy the completed `ClangHw2.cpp` file from your `$LLVM_HOME/clang/tools/clang-hw2/` directory to this projects `src`

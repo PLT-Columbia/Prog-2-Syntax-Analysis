@@ -214,8 +214,8 @@ We also provide some skeleton code for `VisitCallExpr()`.
 
 To make things easier, you just need to output the line number and the formatted function call (no need to modify the original input string). For example, if line 30 of the original code is:
 
-```
-int ret = foo( k     ,      bar(    5      )  +  foo(   1    , bar(     foo    (    1+   3  ,   2    )    )    )    );
+```c
+int ret = foo( k     ,     foo(   1    , bar(     foo    (    1+   3  ,   2    )    )    )    );
 ```
 
 Then you should output the following line to `stdout`:
@@ -227,12 +227,13 @@ line 30: foo (k, foo (1, bar (foo (1+   3, 2))))
 You may assume the following constraints:
 
 1. Function calls will **never** span multiple lines, like:
-```
+```c
 foo(arg1,
     arg2,
     arg3
 );
 ```
+
 
 2. The number of the outermost function call (if any) in one line will always be exactly one. We will **not** test the codes like following:
 ```

@@ -35,7 +35,7 @@ From this assignment:
 You have already implemented a (albeit very simple) lexical analyzer/tokenizer that converts character sequences from a code stream to token sequences. As you learned in lecture, this token sequence is processed by the parser, and an **abstract syntax tree (AST)** is generated. In this assignment, you will use the `clang` compiler to generate an AST. Further, you will investigate two different case studies to analyze an AST.
 
 ### Generating the AST (10 Points)
-In Programming Assignment 2.1, you saw how to build LLVM. The Clang compiler front-end leverages the LLVM back-end infrastructure. For any code written in `C` or `C++`, you can generate (and visualize) the AST using Clang.
+In Programming Assignment 2.1, you saw how to build LLVM. The Clang compiler front-end leverages the LLVM back-end infrastructure. For any code written in `C` or `C++` (also `ObjC`), you can generate (and visualize) the AST using Clang.
 
 First, let the shell/terminal know where you built LLVM. We recommend adding the following line to your `$HOME/.bashrc` file:
 ```sh
@@ -48,10 +48,10 @@ $LLVM_HOME/build/bin/clang -cc1 -ast-dump gcd.c -I /usr/include/ \
 ```
 
 You should spend some time looking at the output. Please write a few sentences in the [outputs/AST.txt](outputs/AST.txt) file describing the following:
-* What information is being presented in the output
-* What you find interesting about the output
+* What information is being presented in the output.
+* What you find interesting about the output.
 
-Alternatively, you can generate a visual representation of the AST. Try running the following command:
+You can also generate a visual representation of the AST. Try running the following command:
  
 ```sh
 export LLVM_HOME=[base directory where you built your llvm];
@@ -79,21 +79,21 @@ or not. We will describe the tools that you will use for this task in a [later s
 #### Example
 ```c
 1. int recursive_factorial(int n1){
-2.      if (n1 <= 1){
-3.		    return 1;
-4.	    }
-5.	    return n1 * recursive_factorial(n1 - 1);
+2.     if (n1 <= 1){
+3.         return 1;
+4.     }
+5.     return n1 * recursive_factorial (n1 - 1);
 6. }
 ```
 In this `C` code snippet, the function `recursive_factorial` is a direct recursive function, since there is a call to itself inside the body (line 5). In contrast, the following function is not direct recursive; even though there is function call at 
 line 4, the callee is not the function itself:
 ```c
 1. int iterative_factorial(int n1){
-2.	    int res = 1;
-3.	    for(int i = 0; i <= n3; i++){
-4.		    res = mult(res, i); // multiplication of res and i.
-5.	    }
-6.	    return res;
+2.     int res = 1;
+3.     for(int i = 0; i <= n3; i++){
+4.         res = mult(res, i); // multiplication of res and i.
+5.     }
+6.     return res;
 7. }
 ``` 
 
@@ -102,11 +102,11 @@ line 4, the callee is not the function itself:
 According to `C` language specifications, it is perfectly legal to redefine a variable with the same name in an inner scope. For example:
 ```c
 1. void foo() {
-2.      int i = 4, j = 5;
-3.      for (i = 0; i < 6; i++){
-4.          int j = 9;
-5.          // Do something
-6.      }
+2.     int i = 4, j = 5;
+3.     for (i = 0; i < 6; i++){
+4.         int j = 9;
+5.         // Do something
+6.     }
 7. }
 ```
 Variable `j` is redefined in line 4, which was already defined in an outer scope (line 2). While such a redefinition is legal, there is a high chance that it is a developer mistake, and we need to build a tool to warn her.
@@ -126,8 +126,8 @@ As another example, note that the following case, however, **does not** have any
  5.  	    return gcd_recursive(n2,r);
  6.     }
  7.     else {
- 8.  		int k4 = n2;
- 9.     	return k4;
+ 8.  	    int k4 = n2;
+ 9.         return k4;
 10.  	}
 11.  }
 ```
@@ -138,11 +138,11 @@ Even though the `k4` variable is defined in line 4 and again in line 8, the earl
 2. Changing the value of a variable is **NOT** considered a redefinition. For instance:
 ```c
 1. void foo() {
-2.      int i = 4, j = 5;
-3.      for (i = 0; i < 6; i++){
-4.          int j = 9;
-5.          // Do something
-6.      }
+2.     int i = 4, j = 5;
+3.     for (i = 0; i < 6; i++){
+4.         int j = 9;
+5.         // Do something
+6.     }
 7. }
 ```
 In this example, at line 3, the value of variable `i` is changed, but because the variable is still the same, this is not a redefinition. A variable will be considered redefined when another variable with the same name (same or different data types) is re-declared in an inner scope.

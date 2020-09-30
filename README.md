@@ -272,10 +272,10 @@ getFunc (1+0) (5, 6)
 **Explanation:** In line 18 of the code above, there is a function call. It is a little bit complicated than
 the other one. 
 
-<p align="center"> <img src="images/call-expr-2.png" alt="CallExprAST" width="30%"/> </p>
+<p align="center"> <img src="images/call-expr-2.png" alt="CallExprAST" width="35%"/> </p>
 
-Here the callee is not a function name, rather it is another function call to `getFunc`
-which takes in 1 argument. Thus we reformat that to `getFunc (1+0)` and finally we get
+Here the `Callee` is not a function name, rather it is another function call (a `CallExpr` node) to `getFunc`
+which takes in 1 argument. Thus we reformat the `Callee` to `getFunc (1+0)` and finally we get
 the formatted output `getFunc (1+0) (5, 6)`.
 
 You may consider the following constraints:
@@ -288,7 +288,7 @@ you should copy the code as is from the input source. We have provided a helper 
 pure non-function call, *i.e.*, there will not be a mixture of functions and non-functions 
 involved in binary expressions, conditional expressions, etc. 
 As an example, we will **NOT** test the following case:
-```
+```c
 foo(bar(3) + 1, 9 + bar(6))
 ```
 3. We will only test C code inputs. You **DO NOT** need to handle function calls in C++ or 

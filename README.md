@@ -35,7 +35,7 @@ From this assignment:
 You have already implemented a (albeit very simple) lexical analyzer/tokenizer that converts character sequences from a code stream to token sequences. As you learned in lecture, this token sequence is processed by the parser, and an **abstract syntax tree (AST)** is generated. In this assignment, you will use the `clang` compiler to generate an AST. Further, you will investigate two different case studies to analyze an AST.
 
 ### Generating the AST (10 Points)
-In Programming Assignment 2.1, you saw how to build LLVM. The Clang compiler front-end leverages the LLVM back-end infrastructure. For any code written in `C` or `C++` (also `ObjC`), you can generate (and visualize) the AST using Clang.
+In Programming Assignment 2.1, you saw how to build LLVM. The Clang compiler front-end leverages the LLVM back-end infrastructure. For any code written in `C`, `C++`, or `Objective-C`, you can generate (and visualize) the AST using Clang.
 
 First, let the shell/terminal know where you built LLVM. We recommend adding the following line to your `$HOME/.bashrc` file:
 ```sh
@@ -48,8 +48,8 @@ $LLVM_HOME/build/bin/clang -cc1 -ast-dump gcd.c -I /usr/include/ \
 ```
 
 You should spend some time looking at the output. Please write a few sentences in the [outputs/AST.txt](outputs/AST.txt) file describing the following:
-* What information is being presented in the output.
-* What you find interesting about the output.
+* What information is being presented in the output
+* What you find interesting about the output
 
 You can also generate a visual representation of the AST. Try running the following command:
  

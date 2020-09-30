@@ -178,7 +178,9 @@ Redefining variable : "k4" at line 7 which is initially defined at line 2
 
 ## Extra Credit (50 Points)
 
-We can perform a lot of interesting operations using an AST. In task 1, you learned how to identify recursive functions. In this extra credit section of the assignment, you will gain some experience on automatic code formatting by analyzing an AST.
+We can perform a lot of interesting operations using an AST. In task 1, you learned how to 
+identify recursive functions. In this extra credit section of the assignment, you will gain 
+some hands on experience on automatic code formatting by analyzing an AST.
 
 Suppose you have a function call in your code such as the following:
 ```c
@@ -188,35 +190,54 @@ Then, you will need to format it as:
 ```c
 foo (1, 2, 3, 5)
 ```
-More specifically, you will need to format the call expression as `<callee><space>(<arg1>,<space><arg2>,<space>...,<space><argn>)` for all `n` arguments. 
-The `<space>` represents a single space character `' '`. Note that the callee and/or arguments of a function may also be function calls themselves, and you will also need to figure out how to reformat those nested function calls whenever they arise. 
+More specifically, you will need to format the call expression as 
+`<callee><space>(<arg1>,<space><arg2>,<space>...,<space><argn>)` for all `n` arguments. 
+The `<space>` represents a single space character `' '`. 
+Note that the callee and/or arguments of a function may also be function calls themselves, 
+and you will also need to figure out how to reformat those nested function calls 
+whenever they arise. 
 
 
 ### Code and Logistics 
-From the `VisitFunctionDecl` function, we call [`analyzeCallExpressionReformat`](src/ClangHw2.cpp#L69) to perform a [depth-first search (DFS)](https://en.wikipedia.org/wiki/Depth-first_search) on the AST. While performing DFS, if we encounter any [`CallExpr`](https://clang.llvm.org/doxygen/classclang_1_1CallExpr.html) node, we call the [`formatFunctionCall`](src/ClangHw2.cpp#L79) function. You have to implement this function so that the function call expression is reformatted.
+From the `VisitFunctionDecl` function, we call [`analyzeCallExpressionReformat`](src/ClangHw2.cpp#L79) 
+to perform a [Depth-first search (DFS)](https://en.wikipedia.org/wiki/Depth-first_search) on the AST. 
+While performing DFS, if we encounter any [`CallExpr`](https://clang.llvm.org/doxygen/classclang_1_1CallExpr.html) 
+node, we call the [`formatFunctionCall`](src/ClangHw2.cpp#L79) function. 
+You have to implement this function so that the function call expression is reformatted.
+
+Note that, you **DON'T** have to identify method call in a given code. We have already implemented that for
+you. You have to implement [`formatFunctionCall`](src/ClangHw2.cpp#L79) function and return the formatted
+string of the function call. 
 
 ### Examples
+The conceptual AST structure of a `CallExpr` node in an AST looks like this
+<p align="center"> <img src="call-expr.png" alt="CallExprAST" width="70%"/> </p>
+
+the `Callee` and any of the arguments (_i.e._ `arg1`, `arg2`, etc.) can also be `CallExpr`.
+The following examples illustrate (and explain) some example.
 
 The following code is very difficult to read:
 ```c
- 1. int bar(int k){
- 2.     foo(
- 3.   3,
- 4.                     foo (
- 5.     too(    ) ,
- 6. foo(
- 7.                   5  ,  too (   )
- 8.        )            )
- 9.                           );
-10.        return 0;
-11. }
+1. int bar(int k){
+2.     foo(
+3.   bar ( k 
+4. ),
+5. 1   );
+6.        return 0;
+7. }
 ```
 
 However, when you run your reformatter tool, the function call to `foo` at line 2 should be formatted as:
 ```c
-foo (3, foo (too (), foo (5, too ())))
+foo (bar (k), 1)
 ```
 Now, it is definitely much easier to understand the function call!
+
+**Explanation:** In the function call at line 2, the callee is a function name `foo` which takes in 2 arguments,
+one of the arguments (first one) is also a function call with that calls `bar` with the argument `k`. 
+The function call `bar` is formatted as `bar (k)` which contributes to original `foo` function call's formatting
+and the whole function call is formatted as `foo (bar (k), 1)`.
+
 
 Here is another example:
 ```c
@@ -242,21 +263,37 @@ Here is another example:
 20.     return 0;
 21. }
 ```
-Here, there is a function call at line 18. However, the callee is not a direct function; instead, it is another `CallExpr` node. You have to reformat that function call as well.
-
 The reformatted code that you should generate is:
 ```c
 getFunc (1+0) (5, 6)
 ```
 
+**Explanation:** In line 18 of the code above, there is a function call. It is a little bit complicated than
+the other one. 
+<p align="center"> <img src="call-expr2.png" alt="CallExprAST" width="70%"/> </p>
+
+Here the callee is not a function name, rather it is another function call to `getFunc`
+which takes in 1 argument. Thus we reformat that to `getFunc (1+0)` and finally we get
+the formatted output `getFunc (1+0) (5, 6)`.
+
 You may consider the following constraints:
-1. You have to reformat only the `CallExpr` node. If you encounter any other node (for instance, `1+0 ` in line 19 of the second example is a [`BinaryOperator` node](https://clang.llvm.org/doxygen/classclang_1_1BinaryOperator.html)), you should copy the code as is from the input source. We have provided a helper function [`getSource`](src/ClangHw2.cpp#L61) to copy the input code corresponding to a node.
-2. The callee or arguments of a function call will be either a pure function call or a pure non-function call, *i.e.*, there will not be a mixture of functions and non-functions involved in binary expressions, conditional expressions, etc. As an example, we will **NOT** test the following case:
+1. You have to reformat only the `CallExpr` node. If you encounter any other node 
+(for instance, `1+0 ` in line 19 of the second example is a 
+[`BinaryOperator node`](https://clang.llvm.org/doxygen/classclang_1_1BinaryOperator.html)), 
+you should copy the code as is from the input source. We have provided a helper function 
+[`getSource`](src/ClangHw2.cpp#L61) to copy the input code corresponding to a node.
+2. The callee or arguments of a function call will be either a pure function call or a 
+pure non-function call, *i.e.*, there will not be a mixture of functions and non-functions 
+involved in binary expressions, conditional expressions, etc. 
+As an example, we will **NOT** test the following case:
 ```
 foo(bar(3) + 1, 9 + bar(6))
 ```
-3. We will only test C code inputs. You **DO NOT** need to handle function calls in C++ or C++-specific functionality (including operator overloading or user-defined literals, etc.).
-4. This problem may look like a simple character "parsing and formatting" problem, but you **have to** use the template code we provided. You cannot modify any of our function prototypes.
+3. We will only test C code inputs. You **DO NOT** need to handle function calls in C++ or 
+C++-specific functionality (including operator overloading or user-defined literals, etc.).
+4. This problem may look like a simple character "parsing and formatting" problem, 
+but you **have to** use the template code we provided. You cannot modify any of our 
+function prototypes.
 
 
 ## Submission

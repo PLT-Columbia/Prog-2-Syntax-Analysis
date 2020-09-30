@@ -5,6 +5,7 @@
 *.json
 *.bin
 *.output
+cmake-build-debug/
 # Compiled Object files
 *.slo
 *.lo

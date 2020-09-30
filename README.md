@@ -269,14 +269,12 @@ The reformatted code that you should generate is:
 getFunc (1+0) (5, 6)
 ```
 
-**Explanation:** In line 18 of the code above, there is a function call. It is a little bit complicated than
+**Explanation:** in line 18 of the above code, there is a function call. It is slightly more complicated than
 the other one. 
 
 <p align="center"> <img src="images/call-expr-2.png" alt="CallExprAST" width="35%"/> </p>
 
-Here the `Callee` is not a function name, rather it is another function call (a `CallExpr` node) to `getFunc`
-which takes in 1 argument. Thus we reformat the `Callee` to `getFunc (1+0)` and finally we get
-the formatted output `getFunc (1+0) (5, 6)`.
+Here, the `Callee` is not a function name; rather, it is another function call (a `CallExpr` node) to `getFunc`, which takes in 1 argument. Thus, we reformat the `Callee` to `getFunc (1+0)`, and we finally get the formatted output `getFunc (1+0) (5, 6)`.
 
 You may consider the following constraints:
 1. You have to reformat only the `CallExpr` node. If you encounter any other node 

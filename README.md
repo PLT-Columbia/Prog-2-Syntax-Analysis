@@ -212,7 +212,7 @@ string of the function call.
 ### Examples
 The conceptual AST structure of a `CallExpr` node in an AST looks like this
 
-<p align="center"> <img src="images/call-expr.png" alt="CallExprAST" width="30%"/> </p>
+<p align="center"> <img src="images/call-expr.png" alt="CallExprAST" width="35%"/> </p>
 
 the `Callee` and any of the arguments (_i.e._ `arg1`, `arg2`, etc.) can also be `CallExpr`.
 The following examples illustrate (and explain) some example.

@@ -181,7 +181,7 @@ To implement the above two tasks, you will build a [Clang tool](https://clang.ll
  
 ### Steps
 1. Create a folder named `clang-hw2` under `$LLVM_HOME/clang/tools`.
-2. Copy the [ClangHw2.cpp](src/ClangHw2.cpp), [CMakeLists.txt](src/CMakeLists.txt), [hw_util.h](src/hw_util.h), and [hw_util.cpp](src/hw_util.cpp) files into 
+2. Copy the [ClangHw2.cpp](src/ClangHw2.cpp), [CMakeLists.txt](src/CMakeLists.txt), [hw2_util.h](src/hw2_util.h), and [hw2_util.cpp](src/hw2_util.cpp) files into 
 `$LLVM_HOME/clang/tools/clang-hw2`.
 3. Edit `$LLVM_HOME/clang/tools/CmakeLists.txt` file and add line `add_clang_subdirectory(clang-hw2)`. 
 4. Now go to `$LLVM_HOME/build` and run `make`. When the build is successfully finished, it will generate 
@@ -191,23 +191,23 @@ a binary file named `clang-hw2` in `$LLVM_HOME/build/bin`.
 
 ### About the Code
 
-The [`FunctionVisitor`](src/ClangHw2.cpp#L36) class is a recursive AST visitor, which implements three visitors for three different types of AST nodes. The [`VisitForStmt`](src/ClangHw2.cpp#L143) is called when Clang's ASTVisitor encounters a [`ForStmt`](https://clang.llvm.org/doxygen/classclang_1_1ForStmt.html) type of AST node. You **DO NOT** have to do anything with this function; we are providing it to give you a head start with ASTVisitor. 
+The [`FunctionVisitor`](src/ClangHw2.cpp#L26) class is a recursive AST visitor, which implements three visitors for three different types of AST nodes. The [`VisitForStmt`](src/ClangHw2.cpp#L120) is called when Clang's ASTVisitor encounters a [`ForStmt`](https://clang.llvm.org/doxygen/classclang_1_1ForStmt.html) type of AST node. You **DO NOT** have to do anything with this function; we are providing it to give you a head start with ASTVisitor. 
 
 Here are some other notes about the tasks:
 #### Task 1 
-We implemented [`VisitFunctionDecl`](src/ClangHw2.cpp#L116), which calls the helper function [`isRecursiveFunction`](src/ClangHw2.cpp#L64) and decides whether that function is direct recursive or not. All you have to do is implement this `isRecursiveFunction`.
+We implemented [`VisitFunctionDecl`](src/ClangHw2.cpp#L99), which calls the helper function [`isRecursiveFunction`](src/ClangHw2.cpp#L54) and decides whether that function is direct recursive or not. All you have to do is implement this `isRecursiveFunction`.
 
 You may consider the following constraints for Task 1:
 
 * We will only test C code inputs. You **DO NOT** need to handle function calls in C++ or C++-specific functionality (including operator overloading or user-defined literals, etc.).
 
-When you have fully implemented the first task and have run the tool with [`gcd.c`](gcd.c), you will see the following output:
+When you have fully implemented the first task and have run the tool with [`gcd.c`](examples/gcd.c), you will see the following output:
 ```
 gcd_recursive - recursive
 ```
 
 #### Task2 
-From the `VisitFunctionDecl` function, we call [`analyzeCallExpressionReformat`](src/ClangHw2.cpp#L79) to perform a [depth-first search (DFS)](https://en.wikipedia.org/wiki/Depth-first_search) on the AST. While performing DFS, if we encounter any [`CallExpr`](https://clang.llvm.org/doxygen/classclang_1_1CallExpr.html) node, we call the [`formatFunctionCall`](src/ClangHw2.cpp#L79) function. You have to implement this function so that the function call expression is reformatted. Note that, you **DON'T** have to identify function calls in a given code snippet. We have already implemented that for you. You have to implement the [`formatFunctionCall`](src/ClangHw2.cpp#L79) function and return the formatted string of the function call.
+From the `VisitFunctionDecl` function, we call [`analyzeCallExpressionReformat`](src/ClangHw2.cpp#L79) to perform a [depth-first search (DFS)](https://en.wikipedia.org/wiki/Depth-first_search) on the AST. While performing DFS, if we encounter any [`CallExpr`](https://clang.llvm.org/doxygen/classclang_1_1CallExpr.html) node, we call the [`formatFunctionCall`](src/ClangHw2.cpp#L68) function. You have to implement this function so that the function call expression is reformatted. Note that, you **DON'T** have to identify function calls in a given code snippet. We have already implemented that for you. You have to implement the [`formatFunctionCall`](src/ClangHw2.cpp#L61) function and return the formatted string of the function call.
 
 You may consider the following constraints for Task 2:
 * You have to reformat only the `CallExpr` node. If you encounter any other node (for instance, `1+0 ` in line 19 of the second example is a [`BinaryOperator node`](https://clang.llvm.org/doxygen/classclang_1_1BinaryOperator.html)), you should copy the code as is from the input source. We have provided a helper function [`getSource`](src/ClangHw2.cpp#L61) to copy the input code corresponding to a node.

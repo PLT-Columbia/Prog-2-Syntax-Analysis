@@ -102,7 +102,9 @@ We can perform a lot of interesting operations using an AST. In task 1, you lear
 
 Suppose you have a function call in your code such as the following:
 ```c
-foo( 1,        2      , 3    ,    5)
+foo( 1,       
+        2      , 
+3    ,    5)
 ```
 Then, you will need to format it as:
 ```c

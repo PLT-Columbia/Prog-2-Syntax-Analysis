@@ -193,11 +193,11 @@ a binary file named `clang-hw2` in `$LLVM_HOME/build/bin`.
 
 ### About the Code
 
-The [`FunctionVisitor`](src/ClangHw2.cpp#L26) class is a recursive AST visitor, which implements three visitors for three different types of AST nodes. The [`VisitForStmt`](src/ClangHw2.cpp#L120) is called when Clang's ASTVisitor encounters a [`ForStmt`](https://clang.llvm.org/doxygen/classclang_1_1ForStmt.html) type of AST node. You **DO NOT** have to do anything with this function; we are providing it to give you a head start with ASTVisitor. 
+The [`FunctionVisitor`](src/ClangHw2.cpp#L26) class is a recursive AST visitor, which implements three visitors for two different types of AST nodes. The [`VisitForStmt`](src/ClangHw2.cpp#L120) is called when Clang's ASTVisitor encounters a [`ForStmt`](https://clang.llvm.org/doxygen/classclang_1_1ForStmt.html) type of AST node. You **DO NOT** have to do anything with this function; we are providing it to give you a head start with ASTVisitor. The [`VisitFunctionDecl`](src/ClangHw2.cpp#L99) function is called when a `FunctionDecl` (Function Declaration) node is encountered. 
 
 Here are some other notes about the tasks:
 #### Task 1 
-We implemented [`VisitFunctionDecl`](src/ClangHw2.cpp#L99), which calls the helper function [`isRecursiveFunction`](src/ClangHw2.cpp#L54) and decides whether that function is direct recursive or not. All you have to do is implement this `isRecursiveFunction`.
+We implemented [`VisitFunctionDecl`](src/ClangHw2.cpp#L99), which calls the helper function [`isRecursiveFunction`](src/ClangHw2.cpp#L54) and decides whether that function is direct recursive or not. **All you have to do is implement this `isRecursiveFunction`**.
 
 You may consider the following constraints for Task 1:
 
@@ -209,10 +209,10 @@ gcd_recursive - recursive
 ```
 
 #### Task2 
-From the `VisitFunctionDecl` function, we call [`analyzeCallExpressionReformat`](src/ClangHw2.cpp#L79) to perform a [depth-first search (DFS)](https://en.wikipedia.org/wiki/Depth-first_search) on the AST. While performing DFS, if we encounter any [`CallExpr`](https://clang.llvm.org/doxygen/classclang_1_1CallExpr.html) node, we call the [`formatFunctionCall`](src/ClangHw2.cpp#L68) function. You have to implement this function so that the function call expression is reformatted. Note that, you **DON'T** have to identify function calls in a given code snippet. We have already implemented that for you. You have to implement the [`formatFunctionCall`](src/ClangHw2.cpp#L61) function and return the formatted string of the function call.
+From the `VisitFunctionDecl` function, we call [`analyzeCallExpressionReformat`](src/ClangHw2.cpp#L68) to perform a [depth-first search (DFS)](https://en.wikipedia.org/wiki/Depth-first_search) on the AST. While performing DFS, if we encounter any [`CallExpr`](https://clang.llvm.org/doxygen/classclang_1_1CallExpr.html) node, we call the [`formatFunctionCall`](src/ClangHw2.cpp#L61) function for formatting the code of that call expression. Note that, you **DON'T** have to identify call expressions in a given code snippet. We have already implemented that for you in [this function](src/ClangHw2.cpp#L68). **All you have to do is to implement [`formatFunctionCall`](src/ClangHw2.cpp#L61) function return the formatted code string.**
 
 You may consider the following constraints for Task 2:
-* You have to reformat only the `CallExpr` node. If you encounter any other node (for instance, `1+0 ` in line 19 of the second example is a [`BinaryOperator node`](https://clang.llvm.org/doxygen/classclang_1_1BinaryOperator.html)), you should copy the code as is from the input source. We have provided a helper function [`getSource`](src/ClangHw2.cpp#L61) to copy the input code corresponding to a node.
+* You have to reformat only the `CallExpr` node. If you encounter any other node (for instance, `1+0 ` in line 19 of the second example is a [`BinaryOperator node`](https://clang.llvm.org/doxygen/classclang_1_1BinaryOperator.html)), you should copy the code as is from the input source. We have provided a helper function [`getSource`](src/ClangHw2.cpp#L41) to copy the input code corresponding to a node.
 * The callee or arguments of a function call will be either a pure function call or a pure non-function call, *i.e.*, there will not be a mixture of functions and non-functions involved in binary expressions, conditional expressions, etc. As an example, we will **NOT** test the following case:
 ```c
 foo(bar(3) + 1, 9 + bar(6))

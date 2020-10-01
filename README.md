@@ -15,8 +15,8 @@ Instructor: Prof. Baishakhi Ray
 * **Total Points:** 100
 
 ## Grading Breakdown
-* **Visualizing and Understanding AST:** 10
-* **Task 1 (Detection of Recursive function):** 40
+* **Visualizing and Understanding ASTs:** 10
+* **Task 1 (Recursive Functions):** 40
 * **Task 2 (Code Reformatting Tool):** 50 
 
 ## Assignment Objectives
@@ -53,7 +53,7 @@ You should spend some time looking at the output. Please write a few sentences i
 You can also generate a visual representation of the AST. Try running the following command:
  
 ```sh
-export LLVM_HOME=[base directory where you built your llvm];
+export LLVM_HOME=<base directory where you built your llvm>;
 $LLVM_HOME/build/bin/clang -cc1 -ast-view gcd.c -I /usr/include/ \
         -I $LLVM_HOME/build/lib/clang/12.0.0/include/;
 ```
@@ -83,7 +83,7 @@ In this particular assignment, you will investigate how to analyze an AST to ext
 5.     return n1 * recursive_factorial (n1 - 1);
 6. }
 ```
-In this `C` code snippet, the function `recursive_factorial` is a direct recursive function, since there is a call to itself inside the body (line 5). In contrast, the following function is not direct recursive; even though there is function call at line 4, the callee is not the function itself:
+In the above `C` code snippet, the function `recursive_factorial` is a direct recursive function, since there is a call to itself inside the body (line 5). In contrast, the following function is not direct recursive; even though there is a function call at line 4, the callee is not the function itself:
 ```c
 1. int iterative_factorial(int n1){
 2.     int res = 1;
@@ -94,9 +94,9 @@ In this `C` code snippet, the function `recursive_factorial` is a direct recursi
 7. }
 ``` 
 
-## Task 2: Code Reformatting Tool (50 Points)
+### Task 2: Code Reformatting Tool (50 Points)
 
-We can perform a lot of interesting operations using an AST. In task 1, you learned how to identify recursive functions. In this task, you will gain some hands-on experience on automatic code formatting by analyzing an AST.
+We can perform a lot of interesting operations using an AST. In Task 1, you learned how to identify recursive functions. In this task, you will gain some hands-on experience on automatic code formatting by analyzing an AST.
 
 Suppose you have a function call in your code such as the following:
 ```c
@@ -108,7 +108,7 @@ Then, you will need to format it as:
 ```c
 foo (1, 2, 3, 5)
 ```
-More specifically, you will need to format the call expression as `<callee><space>(<arg1>,<space><arg2>,<space>...,<space><argn>)` for all `n` arguments. The `<space>` represents a single space character `' '`. Note that the callee and/or arguments of a function may also be function calls themselves, and you will also need to figure out how to reformat those nested function calls whenever they arise.
+More specifically, you will need to format the call expression as `<callee><space>(<arg1>,<space><arg2>,<space>...,<space><argn>)` for all `n` arguments. The `<space>` represents a single space character `' '`. Note that the callee and/or arguments of a function may also be function calls themselves, and you will need to figure out how to reformat those nested function calls whenever they arise.
 
 
 ### Examples
@@ -168,7 +168,7 @@ The reformatted code that you should generate is:
 getFunc (1+0) (5, 6)
 ```
 
-**Explanation:** in line 18 of the above code, there is a function call. It is slightly more complicated than the other one.
+**Explanation:** in line 18 of the above code, there is a function call. It is slightly more complicated than the one in the previous example.
 
 <p align="center"> <img src="images/call-expr-2.png" alt="CallExprAST" width="35%"/> </p>
 
@@ -177,26 +177,25 @@ Here, the `Callee` is not a function name; rather, it is another function call (
 
 
 ## Getting Started
-To implement the above two tasks, you will build a [Clang tool](https://clang.llvm.org/docs/LibTooling.html) that uses [llvm/clang's RecursiveASTVisitor API](https://clang.llvm.org/doxygen/classclang_1_1RecursiveASTVisitor.html). We have provided all the setup code to get started. However, we strongly recommend that you go over the API documentation of Clang tooling and AST visitors to understand the basic workflow. 
+To implement the above two tasks, you will build a [Clang tool](https://clang.llvm.org/docs/LibTooling.html) that uses LLVM/Clang's [RecursiveASTVisitor API](https://clang.llvm.org/doxygen/classclang_1_1RecursiveASTVisitor.html). We have provided all the setup code to get started. However, we strongly recommend that you go over the API documentation of Clang tooling and AST visitors to understand the basic workflow.
  
 ### Steps
 1. Create a folder named `clang-hw2` under `$LLVM_HOME/clang/tools`.
 2. Copy the [ClangHw2.cpp](src/ClangHw2.cpp), [CMakeLists.txt](src/CMakeLists.txt), [hw2_util.h](src/hw2_util.h), and [hw2_util.cpp](src/hw2_util.cpp) files into 
 `$LLVM_HOME/clang/tools/clang-hw2`.
-3. Edit `$LLVM_HOME/clang/tools/CmakeLists.txt` file and add line `add_clang_subdirectory(clang-hw2)`. 
-4. Now go to `$LLVM_HOME/build` and run `make`. When the build is successfully finished, it will generate a binary file named `clang-hw2` in `$LLVM_HOME/build/bin`. 
-5. Now run this binary using the following command <br/>
-`$LLVM_HOME/build/bin/clang-hw2 examples/gcd.c --`
+3. Edit the `$LLVM_HOME/clang/tools/CmakeLists.txt` file, and add this line: `add_clang_subdirectory(clang-hw2)`. 
+4. Now, go to `$LLVM_HOME/build`, and run `make`. When the build has successfully finished, it will generate a binary file named `clang-hw2` in `$LLVM_HOME/build/bin`. 
+5. Finally, run the generated binary using the following command: `$LLVM_HOME/build/bin/clang-hw2 examples/gcd.c --`
 
 ### About the Code
 
-The [`FunctionVisitor`](src/ClangHw2.cpp#L26) class is a recursive AST visitor, which implements three visitors for two different types of AST nodes. The [`VisitForStmt`](src/ClangHw2.cpp#L120) is called when Clang's ASTVisitor encounters a [`ForStmt`](https://clang.llvm.org/doxygen/classclang_1_1ForStmt.html) type of AST node. You **DO NOT** have to do anything with this function; we are providing it to give you a head start with ASTVisitor. The [`VisitFunctionDecl`](src/ClangHw2.cpp#L99) function is called when a `FunctionDecl` (Function Declaration) node is encountered. 
+The [`FunctionVisitor`](src/ClangHw2.cpp#L26) class is a recursive AST visitor, which implements three visitors for two different types of AST nodes. The [`VisitForStmt`](src/ClangHw2.cpp#L120) is called when Clang's ASTVisitor encounters a [`ForStmt`](https://clang.llvm.org/doxygen/classclang_1_1ForStmt.html) type of AST node. You **DO NOT** have to do anything with this function; we are providing it to give you a head start with ASTVisitor. The [`VisitFunctionDecl`](src/ClangHw2.cpp#L99) function is called when a `FunctionDecl` (function declaration) node is encountered. 
 
 Here are some other notes about the tasks:
 #### Task 1 
 We implemented [`VisitFunctionDecl`](src/ClangHw2.cpp#L99), which calls the helper function [`isRecursiveFunction`](src/ClangHw2.cpp#L54) and decides whether that function is direct recursive or not. **All you have to do is implement this `isRecursiveFunction` function**.
 
-You may consider the following constraints for Task 1:
+You may consider the following constraint for Task 1:
 
 * We will only test C code inputs. You **DO NOT** need to handle function calls in C++ or C++-specific functionality (including operator overloading or user-defined literals, etc.).
 
@@ -205,7 +204,7 @@ When you have fully implemented the first task and have run the tool with [`gcd.
 gcd_recursive - recursive
 ```
 
-#### Task2 
+#### Task 2 
 From the `VisitFunctionDecl` function, we call [`analyzeCallExpressionReformat`](src/ClangHw2.cpp#L68) to perform a [depth-first search (DFS)](https://en.wikipedia.org/wiki/Depth-first_search) on the AST. While performing DFS, if we encounter any [`CallExpr`](https://clang.llvm.org/doxygen/classclang_1_1CallExpr.html) node, we call the [`formatFunctionCall`](src/ClangHw2.cpp#L61) function for formatting the code of that call expression. Note that, you **DON'T** have to identify call expressions in a given code snippet. We have already implemented that for you in [this function](src/ClangHw2.cpp#L68). **All you have to do is implement the [`formatFunctionCall`](src/ClangHw2.cpp#L61) function and return the formatted code string.**
 
 You may consider the following constraints for Task 2:
@@ -215,11 +214,9 @@ You may consider the following constraints for Task 2:
 foo(bar(3) + 1, 9 + bar(6))
 ```
 * We will only test C code inputs. You **DO NOT** need to handle function calls in C++ or C++-specific functionality (including operator overloading or user-defined literals, etc.).
-* This problem may look like a simple character _"parsing and formatting"_ problem, but you **MUST** use the template code we provided. You cannot modify any of our function prototypes.
+* This problem may look like a simple character _"parsing and formatting"_ problem, but you **MUST** use the template code we provided. Please **DO NOT** change function prototypes of any of the functions we have written.
 
-
-We have provided some other helper functions. Please **DO NOT** change function prototypes of any of the functions we have written.
-
+We have also provided some other helper functions.
 
 
 ## Submission

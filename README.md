@@ -110,13 +110,9 @@ foo (1, 2, 3, 5)
 ```
 More specifically, you will need to format the call expression as `<callee><space>(<arg1>,<space><arg2>,<space>...,<space><argn>)` for all `n` arguments. The `<space>` represents a single space character `' '`. Note that the callee and/or arguments of a function may also be function calls themselves, and you will also need to figure out how to reformat those nested function calls whenever they arise.
 
-### Code and Logistics 
-From the `VisitFunctionDecl` function, we call [`analyzeCallExpressionReformat`](src/ClangHw2.cpp#L79) to perform a [depth-first search (DFS)](https://en.wikipedia.org/wiki/Depth-first_search) on the AST. While performing DFS, if we encounter any [`CallExpr`](https://clang.llvm.org/doxygen/classclang_1_1CallExpr.html) node, we call the [`formatFunctionCall`](src/ClangHw2.cpp#L79) function. You have to implement this function so that the function call expression is reformatted.
-
-Note that, you **DON'T** have to identify function calls in a given code snippet. We have already implemented that for you. You have to implement the [`formatFunctionCall`](src/ClangHw2.cpp#L79) function and return the formatted string of the function call.
 
 ### Examples
-The conceptual AST structure of a `CallExpr` node in an AST looks like this:
+The conceptual AST structure of a `CallExpr` (Function Call Expression) node in an AST looks like this:
 
 <p align="center"> <img src="images/call-expr.png" alt="CallExprAST" width="35%"/> </p>
 
@@ -178,14 +174,6 @@ getFunc (1+0) (5, 6)
 
 Here, the `Callee` is not a function name; rather, it is another function call (a `CallExpr` node) to `getFunc`, which takes in one argument. Thus, we reformat the `Callee` to `getFunc (1+0)`, and we finally get the formatted output `getFunc (1+0) (5, 6)`.
 
-You may consider the following constraints:
-1. You have to reformat only the `CallExpr` node. If you encounter any other node (for instance, `1+0 ` in line 19 of the second example is a [`BinaryOperator node`](https://clang.llvm.org/doxygen/classclang_1_1BinaryOperator.html)), you should copy the code as is from the input source. We have provided a helper function [`getSource`](src/ClangHw2.cpp#L61) to copy the input code corresponding to a node.
-2. The callee or arguments of a function call will be either a pure function call or a pure non-function call, *i.e.*, there will not be a mixture of functions and non-functions involved in binary expressions, conditional expressions, etc. As an example, we will **NOT** test the following case:
-```c
-foo(bar(3) + 1, 9 + bar(6))
-```
-3. We will only test C code inputs. You **DO NOT** need to handle function calls in C++ or C++-specific functionality (including operator overloading or user-defined literals, etc.).
-4. This problem may look like a simple character "parsing and formatting" problem, but you **have to** use the template code we provided. You cannot modify any of our function prototypes.
 
 
 ## Getting Started
@@ -193,7 +181,7 @@ To implement the above two tasks, you will build a [Clang tool](https://clang.ll
  
 ### Steps
 1. Create a folder named `clang-hw2` under `$LLVM_HOME/clang/tools`.
-2. Copy the [ClangHw2.cpp](src/ClangHw2.cpp), and [CMakeLists.txt](src/CMakeLists.txt) files into 
+2. Copy the [ClangHw2.cpp](src/ClangHw2.cpp), [CMakeLists.txt](src/CMakeLists.txt), [hw_util.h](src/hw_util.h), and [hw_util.cpp](src/hw_util.cpp) files into 
 `$LLVM_HOME/clang/tools/clang-hw2`.
 3. Edit `$LLVM_HOME/clang/tools/CmakeLists.txt` file and add line `add_clang_subdirectory(clang-hw2)`. 
 4. Now go to `$LLVM_HOME/build` and run `make`. When the build is successfully finished, it will generate 
@@ -206,13 +194,34 @@ a binary file named `clang-hw2` in `$LLVM_HOME/build/bin`.
 The [`FunctionVisitor`](src/ClangHw2.cpp#L36) class is a recursive AST visitor, which implements three visitors for three different types of AST nodes. The [`VisitForStmt`](src/ClangHw2.cpp#L143) is called when Clang's ASTVisitor encounters a [`ForStmt`](https://clang.llvm.org/doxygen/classclang_1_1ForStmt.html) type of AST node. You **DO NOT** have to do anything with this function; we are providing it to give you a head start with ASTVisitor. 
 
 Here are some other notes about the tasks:
-* For Task 1, we implemented [`VisitFunctionDecl`](src/ClangHw2.cpp#L116), which calls the helper function [`isRecursiveFunction`](src/ClangHw2.cpp#L64) and decides whether that function is direct recursive or not. All you have to do is implement this `isRecursiveFunction`.
-* We have provided some other helper functions. You can add print statements as you are developing your code. However, please make sure you use the helper functions that we provided to print your output. Please **DO NOT** change any print formatting or function prototypes of any helper function, and please make sure to remove any print statements you have added prior to submission.
+#### Task 1 
+We implemented [`VisitFunctionDecl`](src/ClangHw2.cpp#L116), which calls the helper function [`isRecursiveFunction`](src/ClangHw2.cpp#L64) and decides whether that function is direct recursive or not. All you have to do is implement this `isRecursiveFunction`.
+
+You may consider the following constraints for Task 1:
+
+* We will only test C code inputs. You **DO NOT** need to handle function calls in C++ or C++-specific functionality (including operator overloading or user-defined literals, etc.).
 
 When you have fully implemented the first task and have run the tool with [`gcd.c`](gcd.c), you will see the following output:
 ```
 gcd_recursive - recursive
 ```
+
+#### Task2 
+From the `VisitFunctionDecl` function, we call [`analyzeCallExpressionReformat`](src/ClangHw2.cpp#L79) to perform a [depth-first search (DFS)](https://en.wikipedia.org/wiki/Depth-first_search) on the AST. While performing DFS, if we encounter any [`CallExpr`](https://clang.llvm.org/doxygen/classclang_1_1CallExpr.html) node, we call the [`formatFunctionCall`](src/ClangHw2.cpp#L79) function. You have to implement this function so that the function call expression is reformatted. Note that, you **DON'T** have to identify function calls in a given code snippet. We have already implemented that for you. You have to implement the [`formatFunctionCall`](src/ClangHw2.cpp#L79) function and return the formatted string of the function call.
+
+You may consider the following constraints for Task 2:
+* You have to reformat only the `CallExpr` node. If you encounter any other node (for instance, `1+0 ` in line 19 of the second example is a [`BinaryOperator node`](https://clang.llvm.org/doxygen/classclang_1_1BinaryOperator.html)), you should copy the code as is from the input source. We have provided a helper function [`getSource`](src/ClangHw2.cpp#L61) to copy the input code corresponding to a node.
+* The callee or arguments of a function call will be either a pure function call or a pure non-function call, *i.e.*, there will not be a mixture of functions and non-functions involved in binary expressions, conditional expressions, etc. As an example, we will **NOT** test the following case:
+```c
+foo(bar(3) + 1, 9 + bar(6))
+```
+* We will only test C code inputs. You **DO NOT** need to handle function calls in C++ or C++-specific functionality (including operator overloading or user-defined literals, etc.).
+* This problem may look like a simple character _"parsing and formatting"_ problem, but you **have to** use the template code we provided. You cannot modify any of our function prototypes.
+
+
+We have provided some other helper functions. Please **DO NOT** change function prototypes of any of the functions we have written.
+
+
 
 ## Submission
 
@@ -220,9 +229,8 @@ Please follow these steps for submission:
 
 1. Copy the completed `ClangHw2.cpp` file from your `$LLVM_HOME/clang/tools/clang-hw2/` directory to the project's `src` folder. 
 2. Complete the write-up in [outputs/AST.txt](outputs/AST.txt). 
-3. Copy the executable `clang-hw2` from your `$LLVM_HOME/build/bin` directory to the project's `outputs` directory.
-4. Commit your code.
-5. Push the code to the master branch.
+3. Commit your code.
+4. Push the code to the master branch.
 
 ## Piazza
 If you have any questions about this programming assignment, please post them in the Piazza forum for the course, and an instructor will reply to them as soon as possible. Any updates to the assignment itself will be available in Piazza.

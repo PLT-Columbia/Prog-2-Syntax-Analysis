@@ -72,8 +72,7 @@ In this particular assignment, you will investigate how to analyze an AST to ext
 
 ### Task 1: Recursive Functions (40 Points)
 
-[Recursive functions](https://en.wikipedia.org/wiki/Recursion_(computer_science)) are often compact, easy to read, and easy to understand. However, they often incur huge overhead due to [call stack](https://en.wikipedia.org/wiki/Call_stack) maintenance, which is a major concern if you are developing for a resource-constrained system. Your task here is to determine whether a given function is [direct recursive](https://www.educative.io/courses/recursion-for-coding-interviews-in-cpp/BnKojpzLl2W) 
-or not. We will describe the tools that you will use for this task in a [later section](#getting-started).
+[Recursive functions](https://en.wikipedia.org/wiki/Recursion_(computer_science)) are often compact, easy to read, and easy to understand. However, they often incur huge overhead due to [call stack](https://en.wikipedia.org/wiki/Call_stack) maintenance, which is a major concern if you are developing for a resource-constrained system. Your task here is to determine whether a given function is [direct recursive](https://www.educative.io/courses/recursion-for-coding-interviews-in-cpp/BnKojpzLl2W) or not. We will describe the tools that you will use for this task in a [later section](#getting-started).
 
 #### Example
 ```c
@@ -84,8 +83,7 @@ or not. We will describe the tools that you will use for this task in a [later s
 5.     return n1 * recursive_factorial (n1 - 1);
 6. }
 ```
-In this `C` code snippet, the function `recursive_factorial` is a direct recursive function, since there is a call to itself inside the body (line 5). In contrast, the following function is not direct recursive; even though there is function call at 
-line 4, the callee is not the function itself:
+In this `C` code snippet, the function `recursive_factorial` is a direct recursive function, since there is a call to itself inside the body (line 5). In contrast, the following function is not direct recursive; even though there is function call at line 4, the callee is not the function itself:
 ```c
 1. int iterative_factorial(int n1){
 2.     int res = 1;
@@ -186,8 +184,7 @@ To implement the above two tasks, you will build a [Clang tool](https://clang.ll
 2. Copy the [ClangHw2.cpp](src/ClangHw2.cpp), [CMakeLists.txt](src/CMakeLists.txt), [hw2_util.h](src/hw2_util.h), and [hw2_util.cpp](src/hw2_util.cpp) files into 
 `$LLVM_HOME/clang/tools/clang-hw2`.
 3. Edit `$LLVM_HOME/clang/tools/CmakeLists.txt` file and add line `add_clang_subdirectory(clang-hw2)`. 
-4. Now go to `$LLVM_HOME/build` and run `make`. When the build is successfully finished, it will generate 
-a binary file named `clang-hw2` in `$LLVM_HOME/build/bin`. 
+4. Now go to `$LLVM_HOME/build` and run `make`. When the build is successfully finished, it will generate a binary file named `clang-hw2` in `$LLVM_HOME/build/bin`. 
 5. Now run this binary using the following command <br/>
 `$LLVM_HOME/build/bin/clang-hw2 examples/gcd.c --`
 
@@ -197,7 +194,7 @@ The [`FunctionVisitor`](src/ClangHw2.cpp#L26) class is a recursive AST visitor, 
 
 Here are some other notes about the tasks:
 #### Task 1 
-We implemented [`VisitFunctionDecl`](src/ClangHw2.cpp#L99), which calls the helper function [`isRecursiveFunction`](src/ClangHw2.cpp#L54) and decides whether that function is direct recursive or not. **All you have to do is implement this `isRecursiveFunction`**.
+We implemented [`VisitFunctionDecl`](src/ClangHw2.cpp#L99), which calls the helper function [`isRecursiveFunction`](src/ClangHw2.cpp#L54) and decides whether that function is direct recursive or not. **All you have to do is implement this `isRecursiveFunction` function**.
 
 You may consider the following constraints for Task 1:
 
@@ -209,7 +206,7 @@ gcd_recursive - recursive
 ```
 
 #### Task2 
-From the `VisitFunctionDecl` function, we call [`analyzeCallExpressionReformat`](src/ClangHw2.cpp#L68) to perform a [depth-first search (DFS)](https://en.wikipedia.org/wiki/Depth-first_search) on the AST. While performing DFS, if we encounter any [`CallExpr`](https://clang.llvm.org/doxygen/classclang_1_1CallExpr.html) node, we call the [`formatFunctionCall`](src/ClangHw2.cpp#L61) function for formatting the code of that call expression. Note that, you **DON'T** have to identify call expressions in a given code snippet. We have already implemented that for you in [this function](src/ClangHw2.cpp#L68). **All you have to do is to implement [`formatFunctionCall`](src/ClangHw2.cpp#L61) function return the formatted code string.**
+From the `VisitFunctionDecl` function, we call [`analyzeCallExpressionReformat`](src/ClangHw2.cpp#L68) to perform a [depth-first search (DFS)](https://en.wikipedia.org/wiki/Depth-first_search) on the AST. While performing DFS, if we encounter any [`CallExpr`](https://clang.llvm.org/doxygen/classclang_1_1CallExpr.html) node, we call the [`formatFunctionCall`](src/ClangHw2.cpp#L61) function for formatting the code of that call expression. Note that, you **DON'T** have to identify call expressions in a given code snippet. We have already implemented that for you in [this function](src/ClangHw2.cpp#L68). **All you have to do is implement the [`formatFunctionCall`](src/ClangHw2.cpp#L61) function and return the formatted code string.**
 
 You may consider the following constraints for Task 2:
 * You have to reformat only the `CallExpr` node. If you encounter any other node (for instance, `1+0 ` in line 19 of the second example is a [`BinaryOperator node`](https://clang.llvm.org/doxygen/classclang_1_1BinaryOperator.html)), you should copy the code as is from the input source. We have provided a helper function [`getSource`](src/ClangHw2.cpp#L41) to copy the input code corresponding to a node.

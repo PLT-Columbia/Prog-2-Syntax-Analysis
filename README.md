@@ -1,4 +1,4 @@
-# COMS W4115: Programming Assignment 2.2 (Syntactic Analysis)
+# COMS W4115: Programming Assignment 2.2 (Syntax Analysis)
 
 
 ## Course Summary

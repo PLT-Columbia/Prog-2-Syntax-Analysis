@@ -218,7 +218,7 @@ You may consider the following constraints for Task 2:
 foo(bar(3) + 1, 9 + bar(6))
 ```
 * We will only test C code inputs. You **DO NOT** need to handle function calls in C++ or C++-specific functionality (including operator overloading or user-defined literals, etc.).
-* This problem may look like a simple character _"parsing and formatting"_ problem, but you **have to** use the template code we provided. You cannot modify any of our function prototypes.
+* This problem may look like a simple character _"parsing and formatting"_ problem, but you **MUST** use the template code we provided. You cannot modify any of our function prototypes.
 
 
 We have provided some other helper functions. Please **DO NOT** change function prototypes of any of the functions we have written.

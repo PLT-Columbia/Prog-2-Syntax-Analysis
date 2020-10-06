@@ -52,7 +52,7 @@ public:
     }
 
     bool isRecursiveFunction(FunctionDecl *function, Stmt *stmt) {
-        // TODO Implement this function.
+        // TODO: implement this function.
 
         return false;
     }
@@ -60,7 +60,7 @@ public:
 
     std::string formatFunctionCall(CallExpr *callExpr) {
         std::string formattedExpr = "";
-        // TODO: implement the reformat call expression extra credit.
+        // TODO: implement the call expression reformatter.
 
         return formattedExpr;
     }
@@ -118,7 +118,7 @@ public:
      * AST.
      */
     bool VisitForStmt(ForStmt *forStmt) {
-        // We will give them this code for a reference code.
+        // We provide this code as a reference code.
         assert(isa<ForStmt>(forStmt));
         int ln = getLineNumber(forStmt);
         printForStmt(ln);

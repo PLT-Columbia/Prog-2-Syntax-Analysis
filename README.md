@@ -42,7 +42,7 @@ export LLVM_HOME=<base directory where you built your llvm>;
 ```
 Next, try the following command:
 ```sh
-$LLVM_HOME/build/bin/clang -cc1 -ast-dump gcd.c -I /usr/include/ \
+$LLVM_HOME/build/bin/clang -cc1 -ast-dump examples/gcd.c -I /usr/include/ \
         -I $LLVM_HOME/build/lib/clang/12.0.0/include/;
 ```
 
